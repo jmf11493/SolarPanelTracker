@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+	<script type="text/javascript">
+		$(document).ready( function () {
+		    $('#bills').DataTable();
+		    $('#breakers').DataTable();
+		} );
+	</script>
+</head>
+<body>
+
+{% if bills %}
+<p>NYSEG Bill</p>
+<table id="bills" style="border:1px solid black">
+	<thead>
+		<tr>
+			<th>Start Date</th>
+			<th>End Date</th>
+			<th>Billing Days</th>
+			<th>Prior Excess Generation</th>
+			<th>Contribution</th>
+			<th>Useage</th>
+			<th>Billed Useage</th>
+			<th>Billed Amount</th>
+			<th>Avg daily temp</th>
+			<th>Avg daily use</th>
+			<th>Basic Service Charge</th>
+			<th>Theoretical Charge</th>
+			<th>Theoretical Savings</th>
+			<th>All fees Price Per KWH</th>
+			<th>Actual Price Per KWH</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for bill in bills %}
+		<tr>
+			<td>{{bill.billing_start_date}}</td>
+			<td>{{bill.billing_end_date}}</td>
+			<td>{{bill.billing_days}}</td>
+			<td>{{bill.prior_excess_generation}}</td>
+			<td>{{bill.contribution}}</td>
+			<td>{{bill.useage}}</td>
+			<td>{{bill.billed_useage}}</td>
+			<td>{{bill.billed_amount}}</td>
+			<td>{{bill.avg_daily_temp}}</td>
+			<td>{{bill.avg_daily_use}}</td>
+			<td>{{bill.basic_service_charge}}</td>
+			<td>{{bill.theoretical_charge|floatformat:"-2"}}</td>
+			<td>{{bill.theoretical_savings|floatformat:"-2"}}</td>
+			<td>{{bill.price_per_kwh|floatformat:"-3"}}</td>
+			<td>{{bill.actual_price_per_kwh|floatformat:"-3"}}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+	
+</table>
+{% endif %}
+<p>Total Useage - Emporia Vue Calculated Total KWH: {{total_useage|floatformat:"-2"}}, Last Month Total KWH: {{previous_total_useage|floatformat:"-2"}}</p>
+<p>Avg Daily Useage - Emporia Vue Calculated KWH: {{average_daily_use|floatformat:"-2"}}, Last Month Total KWH: {{previous_average_daily_use|floatformat:"-2"}}</p>
+{% if generation %}
+<p>Generation - Solar Edge Calculated Total KWH: {{total_generation.generationKwh__sum|floatformat:"-2"}}, Last Month Total KWH: {{previous_total_generation.generationKwh__sum|floatformat:"-2"}}</p>
+{% endif %}
+<p>Useage Breakdown</p>
+<table style="border:1px solid black" id="breakers">
+	<thead>
+		<tr>
+			<th>Breaker</th>
+			<th>Useage KWH</th>
+			<th>Last Months Useage KWH</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Stove</td>
+			<td>{{stove}}</td>
+			<td>{{p_stove}}</td>
+		</tr>
+		<tr>
+			<td>Microwave</td>
+			<td>{{microwave}}</td>
+			<td>{{p_microwave}}</td>
+		</tr>
+		<tr>
+			<td>Kitchen 1</td>
+			<td>{{kitchen_1}}</td>
+			<td>{{p_kitchen_1}}</td>
+		</tr>
+		<tr>
+			<td>Kitchen 2</td>
+			<td>{{kitchen_2}}</td>
+			<td>{{p_kitchen_2}}</td>
+		</tr>
+		<tr>
+			<td>Refrigerator</td>
+			<td>{{refrigerator}}</td>
+			<td>{{p_refrigerator}}</td>
+		</tr>
+		<tr>
+			<td>Dishwasher</td>
+			<td>{{dishwasher}}</td>
+			<td>{{p_dishwasher}}</td>
+		</tr>
+		<tr>
+			<td>Office 1</td>
+			<td>{{office_1}}</td>
+			<td>{{p_office_1}}</td>
+		</tr>
+		<tr>
+			<td>Office 2</td>
+			<td>{{office_den_kitchen}}</td>
+			<td>{{p_office_den_kitchen}}</td>
+		</tr>
+		<tr>
+			<td>Tack Room</td>
+			<td>{{tack_room}}</td>
+			<td>{{p_tack_room}}</td>
+		</tr>
+		<tr>
+			<td>Feed Room</td>
+			<td>{{feed_room}}</td>
+			<td>{{p_feed_room}}</td>
+		</tr>
+		<tr>
+			<td>South Stalls</td>
+			<td>{{south_stalls}}</td>
+			<td>{{p_south_stalls}}</td>
+		</tr>
+		<tr>
+			<td>North Stalls</td>
+			<td>{{north_stalls}}</td>
+			<td>{{p_north_stalls}}</td>
+		</tr>
+		<tr>
+			<td>Stall Lighting</td>
+			<td>{{stall_lighting}}</td>
+			<td>{{p_stall_lighting}}</td>
+		</tr>
+		<tr>
+			<td>Barn Bathroom</td>
+			<td>{{barn_bathroom}}</td>
+			<td>{{p_barn_bathroom}}</td>
+		</tr>
+		<tr>
+			<td>Main Panel 1</td>
+			<td>{{main_panel_1}}</td>
+			<td>{{p_main_panel_1}}</td>
+		</tr>
+		<tr>
+			<td>Main Panel 2</td>
+			<td>{{main_panel_2}}</td>
+			<td>{{p_main_panel_2}}</td>
+		</tr>
+		<tr>
+			<td>Air Conditioner</td>
+			<td>{{air_conditioner}}</td>
+			<td>{{p_air_conditioner}}</td>
+		</tr>
+		<tr>
+			<td>Garage</td>
+			<td>{{garage}}</td>
+			<td>{{p_garage}}</td>
+		</tr>
+		<tr>
+			<td>Solar 1</td>
+			<td>{{solar_1}}</td>
+			<td>{{p_solar_1}}</td>
+		</tr>
+		<tr>
+			<td>Solar 2</td>
+			<td>{{solar_2}}</td>
+			<td>{{p_solar_2}}</td>
+		</tr>
+		<tr>
+			<td>Furnace</td>
+			<td>{{furnace}}</td>
+			<td>{{p_furnace}}</td>
+		</tr>
+		<tr>
+			<td>Rear Exterior</td>
+			<td>{{rear_exterior}}</td>
+			<td>{{p_rear_exterior}}</td>
+		</tr>
+		<tr>
+			<td>Stairs</td>
+			<td>{{stairs}}</td>
+			<td>{{p_stairs}}</td>
+		</tr>
+		<tr>
+			<td>Water Heater</td>
+			<td>{{water_heater}}</td>
+			<td>{{p_water_heater}}</td>
+		</tr>
+		<tr>
+			<td>Front Exterior</td>
+			<td>{{front_exterior}}</td>
+			<td>{{p_front_exterior}}</td>
+		</tr>
+		<tr>
+			<td>Whirlpool</td>
+			<td>{{whirlpool}}</td>
+			<td>{{p_whirlpool}}</td>
+		</tr>
+		<tr>
+			<td>Sub Panel 1</td>
+			<td>{{sub_panel_1}}</td>
+			<td>{{p_sub_panel_1}}</td>
+		</tr>
+		<tr>
+			<td>Sub Panel 2</td>
+			<td>{{sub_panel_2}}</td>
+			<td>{{p_sub_panel_2}}</td>
+		</tr>
+		<tr>
+			<td>Bedrooms</td>
+			<td>{{bedrooms}}</td>
+			<td>{{p_bedrooms}}</td>
+		</tr>
+		<tr>
+			<td>Main Half Bath</td>
+			<td>{{main_half_bath}}</td>
+			<td>{{p_main_half_bath}}</td>
+		</tr>
+		<tr>
+			<td>Laundry</td>
+			<td>{{laundry}}</td>
+			<td>{{p_laundry}}</td>
+		</tr>
+		<tr>
+			<td>Master Bathroom</td>
+			<td>{{master_bathroom}}</td>
+			<td>{{p_master_bathroom}}</td>
+		</tr>
+		<tr>
+			<td>Bathroom Lighting</td>
+			<td>{{bath_lighting}}</td>
+			<td>{{p_bath_lighting}}</td>
+		</tr>
+		<tr>
+			<td>Deck</td>
+			<td>{{deck}}</td>
+			<td>{{p_deck}}</td>
+		</tr>
+		<tr>
+			<td>Living Room</td>
+			<td>{{living_room}}</td>
+			<td>{{p_living_room}}</td>
+		</tr>
+		<tr>
+			<td>Laundry Storage Pantry Lights</td>
+			<td>{{laundry_storage_pantry}}</td>
+			<td>{{p_laundry_storage_pantry}}</td>
+		</tr>
+	</tbody>
+</table>
+<p>Kitchen</p>
+<table style="border:1px solid black">
+	<tr>
+		<th>Breaker</th>
+		<th>Useage KWH</th>
+		<th>Last Months Useage KWH</th>
+	</tr>
+	<tr>
+		<td>Stove</td>
+		<td>{{stove}}</td>
+		<td>{{p_stove}}</td>
+	</tr>
+	<tr>
+		<td>Microwave</td>
+		<td>{{microwave}}</td>
+		<td>{{p_microwave}}</td>
+	</tr>
+	<tr>
+		<td>Kitchen 1</td>
+		<td>{{kitchen_1}}</td>
+		<td>{{p_kitchen_1}}</td>
+	</tr>
+	<tr>
+		<td>Kitchen 2</td>
+		<td>{{kitchen_2}}</td>
+		<td>{{p_kitchen_2}}</td>
+	</tr>
+	<tr>
+		<td>Refrigerator</td>
+		<td>{{refrigerator}}</td>
+		<td>{{p_refrigerator}}</td>
+	</tr>
+	<tr>
+		<td>Dishwasher</td>
+		<td>{{dishwasher}}</td>
+		<td>{{p_dishwasher}}</td>
+	</tr>
+</table>
+<p>Office</p>
+<table style="border:1px solid black">
+	<tr>
+		<th>Breaker</th>
+		<th>Useage KWH</th>
+		<th>Last Months Useage KWH</th>
+	</tr>
+	<tr>
+		<td>Office 1</td>
+		<td>{{office_1}}</td>
+		<td>{{p_office_1}}</td>
+	</tr>
+	<tr>
+		<td>Office 2</td>
+		<td>{{office_den_kitchen}}</td>
+		<td>{{p_office_den_kitchen}}</td>
+	</tr>
+</table>
+<p>Barn</p>
+<table style="border:1px solid black">
+	<tr>
+		<th>Breaker</th>
+		<th>Useage KWH</th>
+		<th>Last Months Useage KWH</th>
+	</tr>
+	<tr>
+		<td>Tack Room</td>
+		<td>{{tack_room}}</td>
+		<td>{{p_tack_room}}</td>
+	</tr>
+	<tr>
+		<td>Feed Room</td>
+		<td>{{feed_room}}</td>
+		<td>{{p_feed_room}}</td>
+	</tr>
+	<tr>
+		<td>South Stalls</td>
+		<td>{{south_stalls}}</td>
+		<td>{{p_south_stalls}}</td>
+	</tr>
+	<tr>
+		<td>North Stalls</td>
+		<td>{{north_stalls}}</td>
+		<td>{{p_north_stalls}}</td>
+	</tr>
+	<tr>
+		<td>Stall Lighting</td>
+		<td>{{stall_lighting}}</td>
+		<td>{{p_stall_lighting}}</td>
+	</tr>
+	<tr>
+		<td>Barn Bathroom</td>
+		<td>{{barn_bathroom}}</td>
+		<td>{{p_barn_bathroom}}</td>
+	</tr>
+</table>
+<p>Everything Else</p>
+<table style="border:1px solid black">
+	<tr>
+		<th>Breaker</th>
+		<th>Useage KWH</th>
+		<th>Last Months Useage KWH</th>
+	</tr>
+	<tr>
+		<td>Main Panel 1</td>
+		<td>{{main_panel_1}}</td>
+		<td>{{p_main_panel_1}}</td>
+	</tr>
+	<tr>
+		<td>Main Panel 2</td>
+		<td>{{main_panel_2}}</td>
+		<td>{{p_main_panel_2}}</td>
+	</tr>
+	<tr>
+		<td>Air Conditioner</td>
+		<td>{{air_conditioner}}</td>
+		<td>{{p_air_conditioner}}</td>
+	</tr>
+	<tr>
+		<td>Garage</td>
+		<td>{{garage}}</td>
+		<td>{{p_garage}}</td>
+	</tr>
+	<tr>
+		<td>Solar 1</td>
+		<td>{{solar_1}}</td>
+		<td>{{p_solar_1}}</td>
+	</tr>
+	<tr>
+		<td>Solar 2</td>
+		<td>{{solar_2}}</td>
+		<td>{{p_solar_2}}</td>
+	</tr>
+	<tr>
+		<td>Furnace</td>
+		<td>{{furnace}}</td>
+		<td>{{p_furnace}}</td>
+	</tr>
+	<tr>
+		<td>Rear Exterior</td>
+		<td>{{rear_exterior}}</td>
+		<td>{{p_rear_exterior}}</td>
+	</tr>
+	<tr>
+		<td>Stairs</td>
+		<td>{{stairs}}</td>
+		<td>{{p_stairs}}</td>
+	</tr>
+	<tr>
+		<td>Water Heater</td>
+		<td>{{water_heater}}</td>
+		<td>{{p_water_heater}}</td>
+	</tr>
+	<tr>
+		<td>Front Exterior</td>
+		<td>{{front_exterior}}</td>
+		<td>{{p_front_exterior}}</td>
+	</tr>
+	<tr>
+		<td>Whirlpool</td>
+		<td>{{whirlpool}}</td>
+		<td>{{p_whirlpool}}</td>
+	</tr>
+	<tr>
+		<td>Sub Panel 1</td>
+		<td>{{sub_panel_1}}</td>
+		<td>{{p_sub_panel_1}}</td>
+	</tr>
+	<tr>
+		<td>Sub Panel 2</td>
+		<td>{{sub_panel_2}}</td>
+		<td>{{p_sub_panel_2}}</td>
+	</tr>
+	<tr>
+		<td>Bedrooms</td>
+		<td>{{bedrooms}}</td>
+		<td>{{p_bedrooms}}</td>
+	</tr>
+	<tr>
+		<td>Main Half Bath</td>
+		<td>{{main_half_bath}}</td>
+		<td>{{p_main_half_bath}}</td>
+	</tr>
+	<tr>
+		<td>Laundry</td>
+		<td>{{laundry}}</td>
+		<td>{{p_laundry}}</td>
+	</tr>
+	<tr>
+		<td>Master Bathroom</td>
+		<td>{{master_bathroom}}</td>
+		<td>{{p_master_bathroom}}</td>
+	</tr>
+	<tr>
+		<td>Bathroom Lighting</td>
+		<td>{{bath_lighting}}</td>
+		<td>{{p_bath_lighting}}</td>
+	</tr>
+	<tr>
+		<td>Deck</td>
+		<td>{{deck}}</td>
+		<td>{{p_deck}}</td>
+	</tr>
+	<tr>
+		<td>Living Room</td>
+		<td>{{living_room}}</td>
+		<td>{{p_living_room}}</td>
+	</tr>
+	<tr>
+		<td>Laundry Storage Pantry Lights</td>
+		<td>{{laundry_storage_pantry}}</td>
+		<td>{{p_laundry_storage_pantry}}</td>
+	</tr>
+</table>
+{% if test_sql %}
+<p>Day Breakdown</p>
+<table>
+	<tr>
+		<th>Date</th>
+		<th>Generation KWH</th>
+		<th>Minutes Sunlight</th>
+		<th>Sun Rise</th>
+		<th>Sun Set</th>
+		<th>Conditions</th>
+	</tr>
+	{% for sun, gen, conditions in test_sql %}
+		<tr>
+			<td>{{sun.date}}</td>
+			<td>{{gen.total}}</td>
+			<td>{{sun.total}}</td>
+			<td>{{sun.hours_sunlight}}</td>
+			<td>{{sun.sun_rise}}</td>
+			<td>{{sun.sun_set}}</td>
+			<td>{{conditions}}</td>
+		</tr>
+	{% endfor %}
+</table>
+{% endif %}
+{% if weather_hist %}
+<p>Weather History</p>
+
+<table>
+	<tr>
+		<th></th>
+		<th></th>
+		<th></th>
+		<th></th>
+		<th></th>
+	</tr>
+	{% for i in weather_hist %}
+	{%endfor%}
+</table>
+{% endif %}
+<form action="/update/weather" method="POST">
+	{% csrf_token %}
+	<button type="submit">Update Weather History</button>
+</form>
+<form action="/update/solarpanels" method="POST">
+	{% csrf_token %}
+	<button type="submit">Update Solar Panels</button>
+</form>
+<form action="/update/nyseg" method="POST">
+	{% csrf_token %}
+	<button type="submit">Update NYSEG Bills</button>
+</form>
+<form action="/update/energy" method="POST">
+	{% csrf_token %}
+	<button type="submit">Update Energy Use</button>
+</form>
+</body>
+
+</html>
